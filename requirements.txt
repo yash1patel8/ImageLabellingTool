@@ -1,0 +1,4 @@
+firebase-admin==6.1.0  # Adjust to the version you're using or the latest
+streamlit==1.21.0      # If you're using Streamlit, specify the version
+pandas==1.5.3          # If you're using pandas, specify the version
+numpy==1.24.1          # For numerical operations, if you're using it
