@@ -4,9 +4,9 @@ from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 
-# Initialize Firebase Admin SDK
+# Load Firebase credentials from Streamlit Cloud secret
 if not firebase_admin._apps:
-    cred = credentials.Certificate(r"stream-930b0-firebase-adminsdk-fbsvc-a1d244132a.json")
+    cred = credentials.Certificate(os.environ['FIREBASE_CREDENTIALS'])
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
