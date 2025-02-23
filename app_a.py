@@ -1,10 +1,10 @@
 import streamlit as st
 import firebase_admin
+from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 import json
-from firebase_admin import credentials, initialize_app
-from firebase_admin import firestore
+from firebase_admin import initialize_app
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv('SECRETS', '')
@@ -222,7 +222,7 @@ def classify_image(user_id):
             st.session_state['road_condition'] = road_conditions[0]
         road_condition = st.radio("Select road condition", road_conditions, key='road_condition')
 
-        st.markdown("### Features 🛠️")
+        st.markdown("#### Features 🛠️")
         col1, col2, col3 = st.columns(3)
         with col1:
             lane_marking = st.checkbox("Lane Marking 🚦", key='lane_marking', value=st.session_state.get('lane_marking', False))
@@ -328,7 +328,7 @@ def homepage():
         """)
 
         st.markdown("---")
-        st.markdown("### Get Started 🚀")
+        st.markdown("#### Get Started 🚀")
         if not st.session_state.get("logged_in"):
             st.warning("Please login to access the full features of the app. 🔑")
         st.markdown('</div>', unsafe_allow_html=True)
