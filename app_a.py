@@ -6,9 +6,11 @@ import os
 import json
 from firebase_admin import initialize_app
 
-firebase_credentials = os.getenv('FIREBASE_CREDENTIALS')
-if firebase_credentials is None:
-    raise ValueError("FIREBASE_CREDENTIALS environment variable is not set.")
+# Load Firebase credentials from environment variable
+firebase_credentials = os.getenv('SECRETS', '')
+
+if not firebase_credentials:
+    raise ValueError("SECRETS environment variable is not set.")
 
 # Parse the TOML content
 credentials_data = json.loads(firebase_credentials)
