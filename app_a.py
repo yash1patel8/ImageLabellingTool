@@ -3,11 +3,19 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from PIL import Image
 import os
+import json
+from firebase_admin import initialize_app
 
-# Initialize Firebase Admin SDK
-if not firebase_admin._apps:
-    cred = credentials.Certificate(r"stream-930b0-firebase-adminsdk-fbsvc-a1d244132a.json")
-    firebase_admin.initialize_app(cred)
+firebase_credentials = os.getenv('FIREBASE_CREDENTIALS')
+if firebase_credentials is None:
+    raise ValueError("FIREBASE_CREDENTIALS environment variable is not set.")
+
+# Parse the TOML content
+credentials_data = json.loads(firebase_credentials)
+
+# Initialize Firebase with the credentials
+cred = credentials.Certificate(credentials_data)
+initialize_app(cred)
 
 db = firestore.client()
 
