@@ -1,24 +1,15 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-import os
 import json
 
-# Debug: Print the SECRETS environment variable
-st.write("SECRETS environment variable:", os.getenv('SECRETS'))
-
-# Load Firebase credentials from environment variable
-firebase_credentials = os.getenv('SECRETS')
-
-if not firebase_credentials:
-    raise ValueError("SECRETS environment variable is not set.")
-
-# Parse the JSON content
+# Load Firebase credentials from JSON file
 try:
-    credentials_data = json.loads(firebase_credentials)
+    with open("stream-930b0-firebase-adminsdk-fbsvc-95f2c86e92.json", "r") as f:
+        credentials_data = json.load(f)
     st.write("Parsed credentials:", credentials_data)  # Debug: Print parsed credentials
-except json.JSONDecodeError as e:
-    st.error(f"Failed to parse SECRETS as JSON: {e}")
+except Exception as e:
+    st.error(f"Failed to load credentials from file: {e}")
     raise
 
 # Initialize Firebase with the credentials
@@ -31,6 +22,8 @@ except Exception as e:
     raise
 
 db = firestore.client()
+
+# Your app code continues here...
 
 # Custom CSS for styling
 st.markdown(
