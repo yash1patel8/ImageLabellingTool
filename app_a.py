@@ -2,6 +2,7 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import json
+from PIL import Image
 
 # Load Firebase credentials from JSON file
 try:
@@ -12,14 +13,15 @@ except Exception as e:
     st.error(f"Failed to load credentials from file: {e}")
     raise
 
-# Initialize Firebase with the credentials
-try:
-    cred = credentials.Certificate(credentials_data)
-    firebase_admin.initialize_app(cred)
-    st.success("Firebase initialized successfully!")  # Debug: Confirm Firebase initialization
-except Exception as e:
-    st.error(f"Failed to initialize Firebase: {e}")
-    raise
+# Initialize Firebase only if it hasn't been initialized already
+if not firebase_admin._apps:
+    try:
+        cred = credentials.Certificate(credentials_data)
+        firebase_admin.initialize_app(cred)
+        st.success("Firebase initialized successfully!")  # Debug: Confirm Firebase initialization
+    except Exception as e:
+        st.error(f"Failed to initialize Firebase: {e}")
+        raise
 
 db = firestore.client()
 
