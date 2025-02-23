@@ -1,10 +1,10 @@
 import streamlit as st
 import firebase_admin
-from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 import json
-from firebase_admin import initialize_app
+from firebase_admin import credentials, initialize_app
+from firebase_admin import firestore
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv('SECRETS', '')
@@ -12,7 +12,7 @@ firebase_credentials = os.getenv('SECRETS', '')
 if not firebase_credentials:
     raise ValueError("SECRETS environment variable is not set.")
 
-# Parse the TOML content
+# Parse the JSON content
 credentials_data = json.loads(firebase_credentials)
 
 # Initialize Firebase with the credentials
