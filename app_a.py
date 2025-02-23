@@ -1,11 +1,11 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-from PIL import Image
 import os
 import json
-from firebase_admin import initialize_app
 
+# Debug: Print the SECRETS environment variable
+st.write("SECRETS environment variable:", os.getenv('SECRETS'))
 
 # Load Firebase credentials from environment variable
 firebase_credentials = os.getenv('SECRETS')
@@ -14,11 +14,21 @@ if not firebase_credentials:
     raise ValueError("SECRETS environment variable is not set.")
 
 # Parse the JSON content
-credentials_data = json.loads(firebase_credentials)
+try:
+    credentials_data = json.loads(firebase_credentials)
+    st.write("Parsed credentials:", credentials_data)  # Debug: Print parsed credentials
+except json.JSONDecodeError as e:
+    st.error(f"Failed to parse SECRETS as JSON: {e}")
+    raise
 
 # Initialize Firebase with the credentials
-cred = credentials.Certificate(credentials_data)
-firebase_admin.initialize_app(cred)
+try:
+    cred = credentials.Certificate(credentials_data)
+    firebase_admin.initialize_app(cred)
+    st.success("Firebase initialized successfully!")  # Debug: Confirm Firebase initialization
+except Exception as e:
+    st.error(f"Failed to initialize Firebase: {e}")
+    raise
 
 db = firestore.client()
 
