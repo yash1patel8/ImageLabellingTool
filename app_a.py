@@ -6,18 +6,19 @@ import os
 import json
 from firebase_admin import initialize_app
 
+
 # Load Firebase credentials from environment variable
-firebase_credentials = os.getenv('Secrets', '')
+firebase_credentials = os.getenv('SECRETS')
 
 if not firebase_credentials:
-    raise ValueError("Secrets environment variable is not set.")
+    raise ValueError("SECRETS environment variable is not set.")
 
 # Parse the JSON content
 credentials_data = json.loads(firebase_credentials)
 
 # Initialize Firebase with the credentials
 cred = credentials.Certificate(credentials_data)
-initialize_app(cred)
+firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
