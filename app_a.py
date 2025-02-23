@@ -1,31 +1,16 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-import json
 from PIL import Image
+import os
 
-# Load Firebase credentials from JSON file
-try:
-    with open("stream-930b0-firebase-adminsdk-fbsvc-95f2c86e92.json", "r") as f:
-        credentials_data = json.load(f)
-    st.write("Parsed credentials:", credentials_data)  # Debug: Print parsed credentials
-except Exception as e:
-    st.error(f"Failed to load credentials from file: {e}")
-    raise
-
-# Initialize Firebase only if it hasn't been initialized already
+# Initialize Firebase Admin SDK
 if not firebase_admin._apps:
-    try:
-        cred = credentials.Certificate(credentials_data)
-        firebase_admin.initialize_app(cred)
-        st.success("Firebase initialized successfully!")  # Debug: Confirm Firebase initialization
-    except Exception as e:
-        st.error(f"Failed to initialize Firebase: {e}")
-        raise
+    cred = credentials.Certificate(r"C:\Users\patel\Downloads\strream\stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json")
+    firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-# Your app code continues here...
 
 # Custom CSS for styling
 st.markdown(
