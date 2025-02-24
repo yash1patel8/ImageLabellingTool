@@ -17,7 +17,7 @@ except Exception as e:
     st.error(f"Failed to initialize Firebase: {e}")
     st.stop()
 
-db = firestore.client()
+
 
 
 # Custom CSS for styling
