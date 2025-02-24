@@ -1,6 +1,6 @@
 import streamlit as st
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, firestore  # Add firestore to the import
 import json
 
 # Initialize Firebase Admin SDK
@@ -10,13 +10,15 @@ try:
         firebase_config = st.secrets["firebase"]["key_json"]
         cred = credentials.Certificate(json.loads(firebase_config))
         firebase_admin.initialize_app(cred)
+        
+        # Initialize Firestore client
+        db = firestore.client()  # Add this line
 except FileNotFoundError:
     st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
     st.stop()
 except Exception as e:
     st.error(f"Failed to initialize Firebase: {e}")
     st.stop()
-
 
 
 
