@@ -11,15 +11,15 @@ try:
         cred = credentials.Certificate(json.loads(firebase_config))
         firebase_admin.initialize_app(cred)
         
-        # Initialize Firestore client
+        # Initialize Firestore client in the global scope
         db = firestore.client()  # This must be in the global scope
+        st.success("Firebase and Firestore initialized successfully! ✅")
 except FileNotFoundError:
     st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
     st.stop()
 except Exception as e:
     st.error(f"Failed to initialize Firebase: {e}")
     st.stop()
-
 
 # Custom CSS for styling
 st.markdown(
