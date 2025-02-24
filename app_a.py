@@ -12,7 +12,7 @@ try:
         firebase_admin.initialize_app(cred)
         
         # Initialize Firestore client
-        db = firestore.client()
+        db = firestore.client()  # This must be in the global scope
 except FileNotFoundError:
     st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
     st.stop()
