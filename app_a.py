@@ -21,7 +21,6 @@ except Exception as e:
     st.stop()
 
 
-
 # Custom CSS for styling
 st.markdown(
     """
@@ -88,20 +87,23 @@ def user_signup():
         new_password = st.text_input("Password", type='password', placeholder="Enter your password")
 
         if st.button("Sign Up 🚀", key="signup_button"):
-            user_ref = db.collection('users').document(new_user)
-            user_ref.set({
-                'name': new_name,
-                'email': new_email,
-                'university': new_university,
-                'username': new_user,
-                'password': new_password
-            })
-            st.success("You have successfully created a valid Account ✅")
-            st.info("Go to Login Menu to login 🔑")
-            st.session_state['current_page'] = "Login 🔑"
-            st.rerun()
+            try:
+                user_ref = db.collection('users').document(new_user)
+                user_ref.set({
+                    'name': new_name,
+                    'email': new_email,
+                    'university': new_university,
+                    'username': new_user,
+                    'password': new_password
+                })
+                st.success("You have successfully created a valid Account ✅")
+                st.info("Go to Login Menu to login 🔑")
+                st.session_state['current_page'] = "Login 🔑"
+                st.rerun()
+            except Exception as e:
+                st.error(f"Failed to create user: {e}")
         st.markdown('</div>', unsafe_allow_html=True)
-
+        
 def user_login():
     st.subheader("Login Section 🔑")
     with st.container():
