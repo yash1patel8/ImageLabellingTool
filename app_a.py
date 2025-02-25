@@ -2,24 +2,31 @@ import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
 import json
+from PIL import Image
 
 # Initialize Firebase Admin SDK
-try:
-    if not firebase_admin._apps:
-        # Load Firebase credentials from Streamlit secrets
-        firebase_config = st.secrets["firebase"]["key_json"]
-        cred = credentials.Certificate(json.loads(firebase_config))
-        firebase_admin.initialize_app(cred)
-        
-        # Initialize Firestore client in the global scope
-        db = firestore.client()  # This must be in the global scope
-        st.success("Firebase and Firestore initialized successfully! ✅")
-except FileNotFoundError:
-    st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
-    st.stop()
-except Exception as e:
-    st.error(f"Failed to initialize Firebase: {e}")
-    st.stop()
+def initialize_firebase():
+    try:
+        if not firebase_admin._apps:
+            # Load Firebase credentials from Streamlit secrets
+            firebase_config = st.secrets["firebase"]["key_json"]
+            cred = credentials.Certificate(json.loads(firebase_config))
+            firebase_admin.initialize_app(cred)
+            st.success("Firebase and Firestore initialized successfully! ✅")
+    except FileNotFoundError:
+        st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
+        st.stop()
+    except Exception as e:
+        st.error(f"Failed to initialize Firebase: {e}")
+        st.stop()
+
+# Initialize Firestore client
+def get_firestore_client():
+    return firestore.client()
+
+# Initialize Firebase and Firestore
+initialize_firebase()
+db = get_firestore_client()
 
 # Custom CSS for styling
 st.markdown(
@@ -109,20 +116,23 @@ def user_login():
         password = st.text_input("Password", type='password', placeholder="Enter your password", key='login_password')
 
         if st.button("Login 🚪", key="login_button"):
-            user_ref = db.collection('users').document(username)
-            user = user_ref.get()
-            if user.exists:
-                user_data = user.to_dict()
-                if password == user_data['password']:
-                    st.session_state['logged_in'] = True
-                    st.session_state['user_id'] = username
-                    st.success(f"Logged In as {username} ✅")
-                    st.session_state['current_page'] = "Project Selection 📂"
-                    st.rerun()
+            try:
+                user_ref = db.collection('users').document(username)
+                user = user_ref.get()
+                if user.exists:
+                    user_data = user.to_dict()
+                    if password == user_data['password']:
+                        st.session_state['logged_in'] = True
+                        st.session_state['user_id'] = username
+                        st.success(f"Logged In as {username} ✅")
+                        st.session_state['current_page'] = "Project Selection 📂"
+                        st.rerun()
+                    else:
+                        st.warning("Incorrect Password ❌")
                 else:
-                    st.warning("Incorrect Password ❌")
-            else:
-                st.warning("User not found ❌")
+                    st.warning("User not found ❌")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
         st.markdown('</div>', unsafe_allow_html=True)
 
 def project_selection():
