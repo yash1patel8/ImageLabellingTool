@@ -4,6 +4,20 @@ from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 
+print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+from google.cloud import firestore
+from google.auth.exceptions import DefaultCredentialsError
+
+try:
+    # Attempt to fetch data from Firestore
+    user_ref = db.collection('users').document('user_id')
+    user = user_ref.get()
+    print(user.to_dict())
+except DefaultCredentialsError as e:
+    print(f"Credentials error: {e}")
+except Exception as e:
+    print(f"Error occurred: {e}")
+
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
     cred = credentials.Certificate("/home/ec2-user/ImageLabellingTool/key.json")
