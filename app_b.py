@@ -3,16 +3,10 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from PIL import Image
 import os
+from google.cloud import firestore
 from google.auth.exceptions import DefaultCredentialsError
 
-# Initialize Firebase Admin SDK
-if not firebase_admin._apps:
-    cred = credentials.Certificate("/home/ec2-user/ImageLabellingTool/key.json")
-    firebase_admin.initialize_app(cred)
-
-# Now, create Firestore client
-db = firestore.client()
-
+# Attempt to fetch data from Firestore
 print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 try:
     # Attempt to fetch data from Firestore
@@ -24,6 +18,12 @@ except DefaultCredentialsError as e:
 except Exception as e:
     print(f"Error occurred: {e}")
 
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate("/home/ec2-user/ImageLabellingTool/key.json")
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 # Custom CSS for styling
 st.markdown(
@@ -306,101 +306,29 @@ def homepage():
     with st.container():
         st.markdown('<div class="bordered-section">', unsafe_allow_html=True)
         st.markdown("## About the Tool")
-        st.markdown("""
-            This tool helps you detect and classify road conditions, including potholes, cracks, and other obstacles. 
-            It uses image analysis to provide insights into road quality and helps in maintaining safer roads.
-        """)
-
+        st.markdown("""This tool helps you detect and classify road conditions, including potholes, cracks, and other obstacles. 
+                      It uses image analysis to provide insights into road quality and helps in maintaining safer roads.""")
         st.markdown("## Key Features")
-        st.markdown("""
-            - **Image Upload & Analysis:** Upload images of roads to detect potholes and cracks.
-            - **Road Condition Classification:** Classify roads as Good, Bad, or Unclear.
-            - **Feature Detection:** Identify lane markings, shadows, obstacles, and more.
-            - **User Authentication:** Secure login and sign-up system.
-            - **Project Management:** Create and manage multiple projects.
-            - **Data Storage:** Store classification results in a database.
-            - **Interactive UI:** Easy-to-use interface with visual feedback.
-        """)
-
-        st.markdown("## How to Use")
-        st.markdown("""
-            1. **Sign Up:** Create a new account if you don't have one.
-            2. **Login:** Use your credentials to access the tool.
-            3. **Create/Select Project:** Start a new project or continue an existing one.
-            4. **Upload Images:** Select images from your computer.
-            5. **Classify:** Analyze the road conditions and submit your findings.
-        """)
-
-        st.markdown("---")
-        st.markdown("### Get Started 🚀")
-        if not st.session_state.get("logged_in"):
-            st.warning("Please login to access the full features of the app. 🔑")
+        st.markdown("""- **Image Upload & Analysis:** Upload images of roads to detect potholes and cracks.
+                        - **Road Condition Classification:** Classify roads as Good, Bad, or Unclear.
+                        - **Feature Detection:** Identify lane markings, shadows, obstacles, and more.
+                        - **User Authentication:** Secure login and sign-up system.""")
         st.markdown('</div>', unsafe_allow_html=True)
 
-def main():
-    if 'logged_in' not in st.session_state:
-        st.session_state['logged_in'] = False
-    if 'user_id' not in st.session_state:
-        st.session_state['user_id'] = None
+def run():
     if 'current_page' not in st.session_state:
-        st.session_state['current_page'] = "Home 🏠"
-    if 'current_project' not in st.session_state:
-        st.session_state['current_project'] = None
-
-    st.sidebar.markdown("# Navigation 🧭")
-    st.sidebar.markdown("---")
-
-    # Modify sidebar navigation
-    if st.sidebar.button("Home 🏠", key="nav_home"):
-        st.session_state['current_page'] = "Home 🏠"
-        st.rerun()
-    if not st.session_state.get('logged_in'):
-        if st.sidebar.button("Login 🔑", key="nav_login"):
-            st.session_state['current_page'] = "Login 🔑"
-            st.rerun()
-        if st.sidebar.button("Sign Up 🆕", key="nav_signup"):
-            st.session_state['current_page'] = "Sign Up 🆕"
-            st.rerun()
-    else:
-        if st.sidebar.button("Project Selection 📂", key="nav_project"):
-            st.session_state['current_page'] = "Project Selection 📂"
-            st.rerun()
-        if st.session_state.get('current_project'):
-            if st.sidebar.button("Classify Images 🖼️", key="nav_classify"):
-                st.session_state['current_page'] = "Classify Images 🖼️"
-                st.rerun()
-            if st.sidebar.button("View All Classifications 📊", key="nav_view"):
-                st.session_state['current_page'] = "View All Classifications 📊"
-                st.rerun()
-        if st.sidebar.button("Log Out 🔒", key="nav_logout"):
-            st.session_state['logged_in'] = False
-            st.session_state['user_id'] = None
-            st.session_state['current_project'] = None
-            st.session_state['current_page'] = "Home 🏠"
-            st.rerun()
-
-    # Page routing
-    if st.session_state['current_page'] == "Home 🏠":
+        st.session_state['current_page'] = "Homepage"
+        
+    if st.session_state['current_page'] == "Homepage":
         homepage()
     elif st.session_state['current_page'] == "Login 🔑":
         user_login()
-    elif st.session_state['current_page'] == "Sign Up 🆕":
-        user_signup()
     elif st.session_state['current_page'] == "Project Selection 📂":
-        if st.session_state.get("logged_in"):
-            project_selection()
-        else:
-            st.warning("Please login to access this section. 🔑")
+        project_selection()
     elif st.session_state['current_page'] == "Classify Images 🖼️":
-        if st.session_state.get("logged_in") and st.session_state.get("current_project"):
-            classify_image(st.session_state.user_id)
-        else:
-            st.warning("Please login and select a project to access this section. 🔑")
+        classify_image(st.session_state['user_id'])
     elif st.session_state['current_page'] == "View All Classifications 📊":
-        if st.session_state.get("logged_in") and st.session_state.get("current_project"):
-            view_all_classifications()
-        else:
-            st.warning("Please login and select a project to access this section. 🔑")
+        view_all_classifications()
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    run()
