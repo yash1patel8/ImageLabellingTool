@@ -1,21 +1,20 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-from PIL import Image
+import json
 import os
 
-# Get the current directory where the script is located
-script_dir = os.path.dirname(os.path.realpath(__file__))
+# Access the Firebase credentials from Streamlit secrets
+firebase_credentials = json.loads(st.secrets["firebase"]["FIREBASE_CREDENTIALS"])
 
-# Build the full path to the JSON file in the same directory
-json_path = os.path.join(script_dir, 'stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json')
-
-# Initialize the Firebase Admin SDK with the credentials
-cred = credentials.Certificate(json_path)
+# Initialize Firebase with the credentials
+cred = credentials.Certificate(firebase_credentials)
 firebase_admin.initialize_app(cred)
 
 # Initialize Firestore
 db = firestore.client()
+
+# Your Streamlit app logic here
 
 
 # Custom CSS for styling
