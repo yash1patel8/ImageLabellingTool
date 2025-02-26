@@ -4,19 +4,18 @@ from firebase_admin import credentials, firestore
 import json
 from PIL import Image
 
-# Initialize Firebase Admin SDK
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 def initialize_firebase():
     try:
         if not firebase_admin._apps:
-            # Load Firebase credentials from Streamlit secrets
             firebase_config = st.secrets["firebase"]["key_json"]
             cred = credentials.Certificate(json.loads(firebase_config))
             firebase_admin.initialize_app(cred)
-            st.success("Firebase and Firestore initialized successfully! ✅")
-    except FileNotFoundError:
-        st.error("Firebase credentials file (key.json) not found. Please ensure the file exists in the correct location.")
-        st.stop()
+            logging.debug("Firebase initialized successfully")
     except Exception as e:
+        logging.error(f"Failed to initialize Firebase: {e}")
         st.error(f"Failed to initialize Firebase: {e}")
         st.stop()
 
@@ -94,18 +93,22 @@ def user_signup():
         new_password = st.text_input("Password", type='password', placeholder="Enter your password")
 
         if st.button("Sign Up 🚀", key="signup_button"):
-            user_ref = db.collection('users').document(new_user)
-            user_ref.set({
-                'name': new_name,
-                'email': new_email,
-                'university': new_university,
-                'username': new_user,
-                'password': new_password
-            })
-            st.success("You have successfully created a valid Account ✅")
-            st.info("Go to Login Menu to login 🔑")
-            st.session_state['current_page'] = "Login 🔑"
-            st.rerun()
+            try:
+                user_ref = db.collection('users').document(new_user)
+                user_ref.set({
+                    'name': new_name,
+                    'email': new_email,
+                    'university': new_university,
+                    'username': new_user,
+                    'password': new_password
+                })
+                st.success("You have successfully created a valid Account ✅")
+                st.info("Go to Login Menu to login 🔑")
+                st.session_state['current_page'] = "Login 🔑"
+                st.rerun()
+            except Exception as e:
+                st.error(f"Failed to create account: {e}")
+                st.error("Please check your Firestore rules and credentials.")
         st.markdown('</div>', unsafe_allow_html=True)
         
 def user_login():
