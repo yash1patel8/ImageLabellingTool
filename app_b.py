@@ -4,10 +4,10 @@ from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 
-print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+
 from google.cloud import firestore
 from google.auth.exceptions import DefaultCredentialsError
-
+print(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
 try:
     # Attempt to fetch data from Firestore
     user_ref = db.collection('users').document('user_id')
