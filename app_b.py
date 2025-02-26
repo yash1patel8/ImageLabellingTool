@@ -6,7 +6,7 @@ import os
 
 # Initialize Firebase Admin SDK
 if not firebase_admin._apps:
-    cred = credentials.Certificate(r"key.json")
+    cred = credentials.Certificate("/home/ec2-user/ImageLabellingTool/key.json")
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
