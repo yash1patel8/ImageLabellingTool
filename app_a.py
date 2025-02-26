@@ -4,19 +4,19 @@ from firebase_admin import credentials, firestore
 import json
 import os
 
-import streamlit as st
 
-firebase_credentials_raw = st.secrets["firebase"]["FIREBASE_CREDENTIALS"]
-st.write(firebase_credentials_raw)  # This will print the raw string for debugging
 
-# Initialize Firebase with the credentials
+# Load the credentials from Streamlit secrets
+firebase_credentials_str = st.secrets["firebase"]["FIREBASE_CREDENTIALS"]
+
+# Ensure the private key and other fields are properly decoded
+firebase_credentials = json.loads(firebase_credentials_str)
+
+# Manually decode the private key field to handle any newline characters
+firebase_credentials["private_key"] = firebase_credentials["private_key"].replace("\\n", "\n")
+
+# Use the credentials
 cred = credentials.Certificate(firebase_credentials)
-firebase_admin.initialize_app(cred)
-
-# Initialize Firestore
-db = firestore.client()
-
-# Your Streamlit app logic here
 
 
 # Custom CSS for styling
