@@ -4,12 +4,19 @@ from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 
-# Initialize Firebase Admin SDK
-if not firebase_admin._apps:
-    cred = credentials.Certificate(r"C:\Users\patel\Downloads\strream\stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json")
-    firebase_admin.initialize_app(cred)
+# Get the current directory where the script is located
+script_dir = os.path.dirname(os.path.realpath(__file__))
 
+# Build the full path to the JSON file in the same directory
+json_path = os.path.join(script_dir, 'stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json')
+
+# Initialize the Firebase Admin SDK with the credentials
+cred = credentials.Certificate(json_path)
+firebase_admin.initialize_app(cred)
+
+# Initialize Firestore
 db = firestore.client()
+
 
 # Custom CSS for styling
 st.markdown(
