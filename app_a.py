@@ -4,8 +4,10 @@ from firebase_admin import credentials, firestore
 import json
 import os
 
-# Access the Firebase credentials from Streamlit secrets
-firebase_credentials = json.loads(st.secrets["firebase"]["FIREBASE_CREDENTIALS"])
+import streamlit as st
+
+firebase_credentials_raw = st.secrets["firebase"]["FIREBASE_CREDENTIALS"]
+st.write(firebase_credentials_raw)  # This will print the raw string for debugging
 
 # Initialize Firebase with the credentials
 cred = credentials.Certificate(firebase_credentials)
