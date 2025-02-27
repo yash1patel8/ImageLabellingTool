@@ -22,10 +22,6 @@ cred = credentials.Certificate({
   "universe_domain": "googleapis.com"
 })
 
-firebase_admin.initialize_app(cred, {
-    'storageBucket': 'your-google-cloud-storage-bucket-name'  # Replace with your bucket name
-})
-
 # Now you can use Firebase services like Firestore and Storage
 db = firestore.client()
 storage_client = storage.client()
