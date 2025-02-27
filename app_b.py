@@ -24,7 +24,6 @@ cred = credentials.Certificate({
 
 # Now you can use Firebase services like Firestore and Storage
 db = firestore.client()
-storage_client = storage.client()
 
 
 
