@@ -3,14 +3,12 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from PIL import Image
 import os
-import json
 
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate(r"C:\Users\patel\Downloads\strream\stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json")
+    firebase_admin.initialize_app(cred)
 
-# Load Firestore credentials from JSON file
-with open("key.json", "r") as f:
-    cred_dict = json.load(f)
-cred = credentials.Certificate(cred_dict)
-firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # Custom CSS for styling
