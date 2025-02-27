@@ -1,23 +1,15 @@
 import streamlit as st
 import firebase_admin
 from firebase_admin import credentials, firestore
-import json
+from PIL import Image
 import os
 
+# Initialize Firebase Admin SDK
+if not firebase_admin._apps:
+    cred = credentials.Certificate(r"C:\Users\patel\Downloads\strream\stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json")
+    firebase_admin.initialize_app(cred)
 
-
-# Load the credentials from Streamlit secrets
-firebase_credentials_str = st.secrets["firebase"]["FIREBASE_CREDENTIALS"]
-
-# Ensure the private key and other fields are properly decoded
-firebase_credentials = json.loads(firebase_credentials_str)
-
-# Manually decode the private key field to handle any newline characters
-firebase_credentials["private_key"] = firebase_credentials["private_key"].replace("\\n", "\n")
-
-# Use the credentials
-cred = credentials.Certificate(firebase_credentials)
-
+db = firestore.client()
 
 # Custom CSS for styling
 st.markdown(
