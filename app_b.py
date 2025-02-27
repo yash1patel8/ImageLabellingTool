@@ -4,8 +4,11 @@ from firebase_admin import credentials, firestore
 from PIL import Image
 import os
 
-# Initialize Firebase Admin SDK
+
+
+# Check if the app is already initialized
 if not firebase_admin._apps:
+    # Load the path to the credentials file relative to the app's root directory
     cred = credentials.Certificate("stream-930b0-firebase-adminsdk-fbsvc-9a1aaa76c8.json")
     firebase_admin.initialize_app(cred)
 
