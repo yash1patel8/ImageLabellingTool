@@ -5,18 +5,20 @@ import json
 from PIL import Image
 import os
 
-# Access Firebase credentials from secrets
-if "FIREBASE_CREDENTIALS" in st.secrets:
-    firebase_credentials_json = json.loads(st.secrets["FIREBASE_CREDENTIALS"])
 
-    # Initialize Firebase Admin SDK
+# Check if the secret exists
+if "FIREBASE_CREDENTIALS" in st.secrets:
+    # Load the secret
+    firebase_credentials_json = json.loads(st.secrets["FIREBASE_CREDENTIALS"])
+    
+    # Initialize Firebase with the credentials
     cred = credentials.Certificate(firebase_credentials_json)
-    if not firebase_admin._apps:
-        firebase_admin.initialize_app(cred)
+    firebase_admin.initialize_app(cred, {
+        'storageBucket': '<YOUR_BUCKET_NAME>'  # Replace with your Firebase Storage bucket name if needed
+    })
     db = firestore.client()
 else:
     st.error("FIREBASE_CREDENTIALS secret is not set in Streamlit Cloud.")
-    db = None
 
 # Custom CSS for styling
 st.markdown(
